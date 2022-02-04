@@ -7,21 +7,24 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class HelloImdbTest {
+public class HelloFirefoxImdbTest {
     private WebDriver driver;
     private Map<String, Object> vars;
     JavascriptExecutor js;
     @BeforeAll
     public void setUp() {
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
     }
@@ -45,6 +48,10 @@ public class HelloImdbTest {
         driver.findElement(By.id("suggestion-search")).sendKeys(Keys.ENTER);
         // 6 | click | linkText=Squid Game |
         driver.findElement(By.linkText("Squid Game")).click();
+
+        WebElement we = new WebDriverWait(driver, timeOutInSeconds: 15)
+        .until(ExpectedConditions.elementToBeClickable(By.linkText("Trivia")));
+
         // 7 | assertText | xpath=//h1 | Squid Game
         assertThat(driver.findElement(By.xpath("//h1")).getText(), is("Squid Game"));
     }
